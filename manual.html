@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>スロットカー・グランプリ マニュアル</title>
+<link rel="stylesheet" href="style.css">
+<style>
+  html, body { overflow: auto; height: auto; }
+  body { background: #0d1117; line-height: 1.8; }
+  .wrap { max-width: 820px; margin: 0 auto; padding: 32px 20px 64px; }
+  header { border-bottom: 3px solid #e0312b; padding-bottom: 12px; margin-bottom: 8px; }
+  header h1 { font-size: 32px; }
+  header p { margin: 4px 0 0; opacity: .75; }
+  nav.toc { background: #161d2a; border: 1px solid #263247; border-radius: 10px; padding: 12px 18px; margin: 20px 0 8px; }
+  nav.toc ol { margin: 4px 0 0; padding-left: 22px; columns: 2; }
+  nav.toc a, .wrap a { color: #8fc1ff; }
+  h2 { margin: 40px 0 10px; padding-left: 10px; border-left: 5px solid #e0312b; font-size: 22px; }
+  h3 { margin: 22px 0 6px; font-size: 17px; }
+  table { width: 100%; border-collapse: collapse; margin: 8px 0; font-size: 15px; }
+  th, td { border: 1px solid #2b3648; padding: 7px 10px; text-align: left; vertical-align: top; }
+  th { background: #1b2433; white-space: nowrap; }
+  kbd { display: inline-block; background: #263247; border: 1px solid #3a4a66; border-bottom-width: 3px;
+    border-radius: 5px; padding: 0 7px; font-family: inherit; font-size: 14px; line-height: 1.6; }
+  .tip { background: #1d2a1e; border: 1px solid #2f5a35; border-radius: 10px; padding: 10px 16px; margin: 12px 0; }
+  .warn { background: #2e2216; border: 1px solid #6a4a22; border-radius: 10px; padding: 10px 16px; margin: 12px 0; }
+  ul, ol { padding-left: 24px; }
+  .back { display: inline-block; margin-top: 12px; }
+  .wrap .ads { margin-top: 20px; border-top: none; padding-top: 0; }
+  .wrap a.ad { color: #e8ecf2; }
+  @media (max-width: 600px) { nav.toc ol { columns: 1; } header h1 { font-size: 26px; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>スロットカー・グランプリ</h1>
+    <p>取扱説明書 ― トリガーひとつで勝負する、2台対戦のスロットカーレース</p>
+  </header>
+
+  <!-- 広告（Amazon アソシエイト）。中身は ads.js で管理 -->
+  <aside id="ads" class="ads" aria-label="広告" hidden></aside>
+
+  <nav class="toc">
+    <b>もくじ</b>
+    <ol>
+      <li><a href="#about">ゲームの概要</a></li>
+      <li><a href="#start">遊びはじめるには</a></li>
+      <li><a href="#controls">操作方法</a></li>
+      <li><a href="#menu">メニューの設定</a></li>
+      <li><a href="#race">レースの流れ</a></li>
+      <li><a href="#deslot">コースアウトについて</a></li>
+      <li><a href="#hud">画面の見かた</a></li>
+      <li><a href="#courses">コース紹介</a></li>
+      <li><a href="#cpu">CPUの強さ</a></li>
+      <li><a href="#tips">速く走るコツ</a></li>
+      <li><a href="#records">記録について</a></li>
+      <li><a href="#faq">困ったときは</a></li>
+    </ol>
+  </nav>
+
+  <h2 id="about">1. ゲームの概要</h2>
+  <p>
+    コースに掘られた溝（スロット）に沿って走るミニカーで、コンピュータ（CPU）と1対1で競争します。
+    ハンドル操作はありません。あなたが操作するのは<b>アクセル（トリガー）ひとつだけ</b>。
+    直線では踏み込み、コーナーの手前でゆるめる ― このアクセルワークだけで勝負が決まります。
+  </p>
+  <p>コーナーにスピードを出しすぎて入ると、車が溝から外れて<b>コースアウト</b>します。速さと安全のバランスを見極めて、CPUより先にゴールを目指しましょう。</p>
+
+  <h2 id="start">2. 遊びはじめるには</h2>
+  <ol>
+    <li>パソコンのブラウザ（Chrome / Edge など）で <b>index.html</b> を開きます。</li>
+    <li>メニューでコース・CPUの強さ・周回数・レーンを選びます。</li>
+    <li><b>スタート</b>ボタンを押すか、<kbd>Enter</kbd> キー（ゲームパッドなら <b>Aボタン</b>）を押すとレースが始まります。</li>
+  </ol>
+  <div class="warn">⚠ 3D表示のためのプログラムをインターネットから読み込みます。<b>インターネットに接続した状態</b>で遊んでください。</div>
+
+  <h2 id="controls">3. 操作方法</h2>
+  <table>
+    <tr><th>操作</th><th>キーボード</th><th>ゲームパッド</th></tr>
+    <tr><td>アクセル</td><td><kbd>Space</kbd> / <kbd>↑</kbd> / <kbd>W</kbd> を押している間</td><td><b>右トリガー（RT / R2）</b>。押し込んだ量に応じて速度が変わります</td></tr>
+    <tr><td>ブレーキ</td><td colspan="2">アクセルを離すと、自動でモーターブレーキがかかります</td></tr>
+    <tr><td>カメラ切り替え</td><td><kbd>C</kbd></td><td>Yボタン</td></tr>
+    <tr><td>一時停止 / 再開</td><td><kbd>Esc</kbd></td><td>Startボタン（メニュー）</td></tr>
+    <tr><td>サウンド オン / オフ</td><td><kbd>M</kbd></td><td>―</td></tr>
+    <tr><td>レース開始</td><td><kbd>Enter</kbd></td><td>Aボタン</td></tr>
+    <tr><td>結果画面：もう一度</td><td><kbd>R</kbd> / <kbd>Enter</kbd></td><td>Aボタン</td></tr>
+    <tr><td>結果画面：メニューへ</td><td><kbd>Esc</kbd></td><td>Bボタン</td></tr>
+  </table>
+  <div class="tip">💡 <b>ゲームパッドがおすすめ。</b>トリガーを半分だけ押せば半分の速度、というように細かく調整できます。キーボードは「全開」か「オフ」の2択なので、軽く連打してスピードを調整します。</div>
+
+  <h3>カメラ</h3>
+  <ul>
+    <li><b>後方追従</b>（はじめの設定）… 自分の車のすぐ後ろから見ます。</li>
+    <li><b>全体</b> … コース全体を斜め上から見渡します。</li>
+    <li><b>真上</b> … コースを真上から見下ろします。コーナーの位置がわかりやすい視点です。</li>
+  </ul>
+
+  <h2 id="menu">4. メニューの設定</h2>
+  <table>
+    <tr><th>項目</th><th>選べる内容</th></tr>
+    <tr><td>コース</td><td>フィギュア8 / オーバル / トリプルクロス（<a href="#courses">コース紹介</a>）</td></tr>
+    <tr><td>CPUの強さ</td><td>よわい / ふつう / つよい</td></tr>
+    <tr><td>周回数</td><td>1 / 3 / 5 / 10 / 20 周</td></tr>
+    <tr><td>あなたのレーン</td><td>レーンA（スタート地点の<span style="color:#ffcc33">黄色</span>の目印）/ レーンB（<span style="color:#33ddff">水色</span>の目印）。CPUはもう一方のレーンを走ります</td></tr>
+  </table>
+  <p>選んだ設定は自動で保存され、次に開いたときも同じ設定から始まります。メニューの背景では、選んだコースがぐるりと回って表示されます。</p>
+
+  <h2 id="race">5. レースの流れ</h2>
+  <ol>
+    <li><b>スタート</b>：ゲートの赤いランプが3つ順に点灯し、すべて<b style="color:#3ad37a">緑</b>に変わったら「GO!」。それまではアクセルを押しても車は動きません。</li>
+    <li><b>周回</b>：スタート／フィニッシュラインを通過するたびに1周とカウントされ、ラップタイムが記録されます。最終周に入ると「FINAL LAP」と表示されます。</li>
+    <li><b>ゴール</b>：先に指定の周回数を走り終えたほうの勝ちです。あなたがゴールしたあとは、車が自動でゆっくり走ります。</li>
+    <li><b>結果</b>：2台ともゴールすると結果画面になり、順位・合計タイム・ベストラップ・コースアウト回数・全ラップタイムが表示されます。</li>
+  </ol>
+
+  <h2 id="deslot">6. コースアウトについて</h2>
+  <p>スロットカーは、コーナーで外側に引っぱられる力（遠心力）に耐えられる限界があります。限界を超える速度でコーナーに入ると、次のようになります。</p>
+  <ol>
+    <li>車のおしりが外側に<b>すべり出し</b>ます。画面左の<b>スライド</b>ゲージがたまっていきます。</li>
+    <li>ゲージが満タンになると、車が溝から外れて<b>コースアウト</b>！ 車は外へ飛び出します。</li>
+    <li>約2秒後、コースマーシャル（係員）が車を元の位置に戻してくれます。ただし<b>速度はゼロから</b>やり直しです。</li>
+  </ol>
+  <div class="tip">💡 すべり出しても、すぐにアクセルをゆるめればゲージは減っていきます。少しすべるくらいが一番速い走り方です。</div>
+
+  <h2 id="hud">7. 画面の見かた</h2>
+  <table>
+    <tr><th>場所</th><th>表示</th><th>意味</th></tr>
+    <tr><td rowspan="6">左上<br>（あなた）</td><td>LAP 2/5</td><td>現在の周回 / 全周回数</td></tr>
+    <tr><td>大きな時計</td><td>スタートからの合計タイム</td></tr>
+    <tr><td>ラップ / ベスト</td><td>今の周のタイム / これまでで一番速い周のタイム</td></tr>
+    <tr><td>速度</td><td>現在の速さ（km/h）</td></tr>
+    <tr><td>トリガー（緑〜黄のバー）</td><td>アクセルの踏み込み量</td></tr>
+    <tr><td>スライド（橙〜赤のバー）</td><td>すべり具合。満タンでコースアウト</td></tr>
+    <tr><td>左側</td><td>ラップ一覧</td><td>各周のタイム。一番速い周が黄色で表示されます</td></tr>
+    <tr><td rowspan="3">右上<br>（CPU）</td><td>LAP / CPUの強さ</td><td>CPUの周回と、選んだ強さ</td></tr>
+    <tr><td>差</td><td>CPUとのタイム差。<b>＋</b>はあなたが遅れている、<b>−</b>はリードしている秒数</td></tr>
+    <tr><td>順位</td><td>現在のあなたの順位</td></tr>
+  </table>
+
+  <h2 id="courses">8. コース紹介</h2>
+  <h3>フィギュア8（昼の田園）</h3>
+  <p>中央で<b>立体交差</b>する定番の8の字コース。左右のコーナーが交互に来るため、レーンAとBの長さは同じ（1周 約159m）です。迷ったらまずはここから。</p>
+  <h3>オーバル（夕暮れのスタジアム）</h3>
+  <p>長い直線2本と大きなコーナー2つの高速コース。バックストレートに小さな丘があります。<b>内側のレーンBのほうが短い</b>（A 約177m / B 約163m）ので、レーンBが有利です。</p>
+  <h3>トリプルクロス（雪山）</h3>
+  <p><b>3か所で立体交差</b>する、アップダウンの激しいテクニカルコース。下り坂では勝手にスピードが上がるので、下りながら入るコーナーは特に注意。レーンA 約272m / レーンB 約245m と差が大きく、レーンBが有利です。</p>
+  <div class="tip">💡 オーバルとトリプルクロスでは、レーンを入れ替えて2回走ると公平な勝負になります。</div>
+
+  <h2 id="cpu">9. CPUの強さ</h2>
+  <table>
+    <tr><th>強さ</th><th>特徴</th></tr>
+    <tr><td>よわい</td><td>コーナーをかなり手前から慎重に走ります。ときどきコーナーに突っ込みすぎて、ミスをすることも。</td></tr>
+    <tr><td>ふつう</td><td>限界の9割くらいで安定して走ります。ミスは少なめ。</td></tr>
+    <tr><td>つよい</td><td>限界ぎりぎりのスピードでコーナーを抜け、ブレーキの判断も早い上級者。ミスはほとんどしません。</td></tr>
+  </table>
+  <p>CPUは周ごとに少しずつペースが変わります。同じ強さでも毎回同じ結果になるとは限りません。</p>
+
+  <h2 id="tips">10. 速く走るコツ</h2>
+  <ul>
+    <li><b>ブレーキは早めに。</b>コーナーに入ってから減速しても間に合いません。コーナーの手前でアクセルを離し、曲がり始めたら少しずつ踏み込みます。</li>
+    <li><b>スライドゲージを見る。</b>ゲージが少し動くくらいが限界の目安。半分を超えたらすぐにアクセルをゆるめましょう。</li>
+    <li><b>コースアウトは大損。</b>戻るまでの約2秒に加えて、ゼロから加速し直す時間もかかります。1周に1回コースアウトするより、少し抑えて走るほうが速いことがほとんどです。</li>
+    <li><b>坂を意識する。</b>上り坂では速度が落ち、下り坂では勝手に速度が上がります。下り坂の先にあるコーナーは、いつもより早めにアクセルを離しましょう。</li>
+    <li><b>真上カメラで練習。</b>コースの形を覚えるまでは、<kbd>C</kbd> で真上視点にすると次のコーナーが見えやすくなります。</li>
+  </ul>
+
+  <h2 id="records">11. 記録について</h2>
+  <p>コースごとに、<b>ベストラップ</b>と<b>周回数ごとの最速合計タイム</b>が自動で保存されます。記録を更新すると結果画面に「新記録！」と表示され、メニューにも自己ベストが表示されます。</p>
+  <p>記録はこのブラウザの中にだけ保存されます。別のブラウザや別のパソコンでは引き継がれません。また、ブラウザの閲覧データを消去すると記録も消えます。</p>
+
+  <h2 id="faq">12. 困ったときは</h2>
+  <table>
+    <tr><th>こんなとき</th><th>こうしてください</th></tr>
+    <tr><td>画面が真っ暗でコースが出ない</td><td>インターネットに接続されているか確認して、ページを再読み込みしてください。</td></tr>
+    <tr><td>ゲームパッドが反応しない</td><td>ページを開いたあとに、パッドのボタンをどれか1回押してください（ブラウザの仕様で、押すまで認識されません）。メニュー下の表示が「ゲームパッド接続中」になればOKです。Xbox系やPlayStation系のパッドに対応しています。それでも反応しない場合は、別のUSBポートにつなぐか、ブラウザをChromeかEdgeに変えてみてください。</td></tr>
+    <tr><td>音が出ない</td><td><kbd>M</kbd> キーでサウンドがオフになっていないか確認してください。音はレース開始後に鳴り始めます。</td></tr>
+    <tr><td>動きがカクカクする</td><td>ほかのアプリやブラウザのタブを閉じてみてください。</td></tr>
+    <tr><td>CPUに勝てない</td><td>CPUの強さを「よわい」にして、<a href="#tips">速く走るコツ</a>を試してみてください。オーバルとトリプルクロスでは、短いレーンBを選ぶのも手です。</td></tr>
+  </table>
+
+  <a class="back" href="index.html">← ゲームに戻る</a>
+</div>
+<script src="ads.js"></script>
+<script>if (typeof renderAds === 'function') renderAds([document.getElementById('ads')]);</script>
+</body>
+</html>

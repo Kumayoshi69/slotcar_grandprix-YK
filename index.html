@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>スロットカー・グランプリ</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="view"></div>
+
+<!-- レース中HUD -->
+<div id="hud" class="hidden">
+  <div class="hud-panel hud-left">
+    <div class="hud-row"><span class="tag p1">YOU</span><span id="hudLapP">LAP 0/3</span></div>
+    <div class="hud-time" id="hudTime">0:00.000</div>
+    <div class="hud-sub">ラップ <span id="hudLapTime">0:00.000</span></div>
+    <div class="hud-sub">ベスト <span id="hudBest">--:--.---</span></div>
+    <div class="hud-sub">速度 <span id="hudSpeed">0</span> km/h</div>
+    <div class="bar"><div id="throttleBar"></div></div>
+    <div class="bar slip"><div id="slipBar"></div></div>
+    <div class="hud-legend"><span>トリガー</span><span>スライド</span></div>
+  </div>
+  <div class="hud-panel hud-right">
+    <div class="hud-row"><span class="tag p2">CPU</span><span id="hudLapC">LAP 0/3</span></div>
+    <div class="hud-sub" id="hudCpuLevel">ふつう</div>
+    <div class="hud-sub">差 <span id="hudGap">--</span></div>
+    <div class="hud-sub" id="hudPos">1位</div>
+  </div>
+  <div id="lapLog"></div>
+  <div id="bigMsg"></div>
+  <div id="help">Space / ↑ / パッドRT：アクセル　C/パッドY：カメラ　Esc/Start：一時停止　M：サウンド</div>
+</div>
+
+<!-- メニュー -->
+<div id="menu" class="overlay">
+  <div class="card">
+    <h1>スロットカー・グランプリ</h1>
+    <p class="lead">トリガーひとつで加減速。攻めすぎるとコーナーで<b>コースアウト</b>！</p>
+
+    <div class="group">
+      <div class="label">コース</div>
+      <div class="opts" data-key="course"></div>
+      <div class="course-desc" id="courseDesc"></div>
+    </div>
+    <div class="group">
+      <div class="label">CPUの強さ</div>
+      <div class="opts" data-key="level">
+        <button data-v="1">よわい</button><button data-v="2">ふつう</button><button data-v="3">つよい</button>
+      </div>
+    </div>
+    <div class="group">
+      <div class="label">周回数</div>
+      <div class="opts" data-key="laps">
+        <button data-v="1">1</button><button data-v="3">3</button><button data-v="5">5</button><button data-v="10">10</button><button data-v="20">20</button>
+      </div>
+    </div>
+    <div class="group">
+      <div class="label">あなたのレーン</div>
+      <div class="opts" data-key="lane">
+        <button data-v="0">レーンA（黄の目印）</button><button data-v="1">レーンB（水色の目印）</button>
+      </div>
+    </div>
+
+    <div class="records" id="records"></div>
+    <button id="startBtn" class="primary">スタート（Enter / パッドA）</button>
+    <div class="pad" id="padInfo">ゲームパッド未接続（ボタンを押すと認識します）</div>
+    <div class="controls">
+      操作：<b>Space</b> / <b>↑</b> を押している間アクセル（離すとブレーキ）。ゲームパッドは <b>右トリガー</b> の押し込み量で速度調整。
+      <a class="manual-link" href="manual.html" target="_blank" rel="noopener">📖 マニュアルを読む</a>
+    </div>
+    <!-- 広告（Amazon アソシエイト）。中身は ads.js で管理。レース中は出さない -->
+    <aside id="adsTitle" class="ads" aria-label="広告" hidden></aside>
+  </div>
+</div>
+
+<!-- 一時停止 -->
+<div id="pause" class="overlay hidden">
+  <div class="card small">
+    <h2>一時停止</h2>
+    <button id="resumeBtn" class="primary">再開（Esc / Start）</button>
+    <button id="retireBtn">メニューに戻る</button>
+  </div>
+</div>
+
+<!-- 結果 -->
+<div id="result" class="overlay hidden">
+  <div class="card">
+    <h2 id="resultTitle">RESULT</h2>
+    <div id="resultBody"></div>
+    <div class="row-btns">
+      <button id="retryBtn" class="primary">もう一度（R / パッドA）</button>
+      <button id="menuBtn">メニュー（Esc / パッドB）</button>
+    </div>
+    <aside id="adsResult" class="ads" aria-label="広告" hidden></aside>
+  </div>
+</div>
+
+<script src="ads.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="game.js"></script>
+</body>
+</html>
