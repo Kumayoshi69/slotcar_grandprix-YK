@@ -42,7 +42,7 @@
     },
     {
       id: 'oval', name: 'オーバル',
-      desc: '高速オーバル。バックストレートに小さな丘あり。内側レーンが短いので有利。',
+      desc: '高速オーバル。バックストレートに小さな丘あり。2か所のクロスオーバーで内と外が入れ替わるので、どちらのレーンも同じ距離。',
       fn(u) {
         const L = 44, r = 13, P = 2 * L + TAU * r;
         let s = (u * P + L / 2) % P;
@@ -58,7 +58,7 @@
     },
     {
       id: 'trefoil', name: 'トリプルクロス',
-      desc: '3か所で立体交差するアップダウンの激しいテクニカルコース。下り坂のコーナーに注意。',
+      desc: '3か所で立体交差するアップダウンの激しいテクニカルコース。2か所のクロスオーバーで内と外が入れ替わる。下り坂のコーナーに注意。',
       fn(u) {
         const t = TAU * (u + 0.1), S = 10, H = 3;
         return [S * (Math.sin(t) + 2 * Math.sin(2 * t)), H * (1 - Math.sin(3 * t)), S * (Math.cos(t) - 2 * Math.cos(2 * t))];
@@ -103,13 +103,62 @@
       T.push(t);
       X.push(new THREE.Vector3(t.z, 0, -t.x).normalize());
     }
-    const lanes = [LANE_OFF, -LANE_OFF].map(off => buildLane(center, X, off));
+    const offA = laneOffsets(T, X, total);
+    const offs = [offA, offA.map(o => -o)];
+    const lanes = offs.map(off => buildLane(center, X, off));
     const box = new THREE.Box3().setFromPoints(center);
-    return { def, center, T, X, length: total, lanes, box };
+    return { def, center, T, X, length: total, lanes, offs, box };
+  }
+
+  // レーンAのオフセット（サンプルごと）。同じ向きのカーブばかりのコースでは内側レーンが有利になるので、
+  // 1周に2か所クロスオーバー（レーンの入れ替え）を入れて、両レーンの曲がる量＝長さを等しくする
+  const XOVER_LEN = 20;   // クロスオーバーの長さ（m）
+  function laneOffsets(T, X, total) {
+    const ds = total / N;
+    const K = [0];        // センターラインの累積旋回角（符号付き）
+    for (let i = 0; i < N; i++) {
+      const dT = T[(i + 1) % N].clone().sub(T[(i - 1 + N) % N]);
+      K[i + 1] = K[i] + dT.dot(X[i]) / 2;
+    }
+    const total_turn = K[N];
+    const off = new Array(N).fill(LANE_OFF);
+    if (Math.abs(total_turn) < 0.5) return off;   // フィギュア8のように左右が釣り合っていれば不要
+
+    const kAbs = i => Math.abs(K[(i + 1) % N] + (i + 1 >= N ? total_turn : 0) - K[i]) / ds;
+    const half = Math.ceil(XOVER_LEN / 2 / ds);
+    const startGap = half + Math.ceil(6 / ds);    // スタートラインには重ねない
+    const cyc = (a, b) => { const d = Math.abs(a - b) % N; return Math.min(d, N - d); };
+    const windowMax = c => { let m = 0; for (let k = -half; k <= half; k++) m = Math.max(m, kAbs((c + k + N) % N)); return m; };
+    const Kw = i => K[i % N] + Math.floor(i / N) * total_turn;
+
+    let best = null;
+    for (let i1 = 0; i1 < N; i1 += 4) {
+      if (cyc(i1, 0) < startGap) continue;
+      const target = Kw(i1) + total_turn / 2;
+      let i2 = -1;
+      for (let i = i1 + 1; i < i1 + N; i++) {
+        if ((Kw(i) - target) * (Kw(i - 1) - target) <= 0) { i2 = i % N; break; }
+      }
+      if (i2 < 0 || cyc(i2, 0) < startGap || cyc(i1, i2) < 2 * half + 2) continue;
+      const score = Math.max(windowMax(i1), windowMax(i2));
+      if (!best || score < best.score) best = { i1, i2, score };
+    }
+    if (!best) return off;
+
+    // i1 で + → −、i2 で − → + に、なめらか（コサイン）に入れ替える
+    const inside = i => ((i - best.i1 + N) % N) < ((best.i2 - best.i1 + N) % N);
+    for (let i = 0; i < N; i++) off[i] = inside(i) ? -LANE_OFF : LANE_OFF;
+    for (const [c, from] of [[best.i1, LANE_OFF], [best.i2, -LANE_OFF]]) {
+      for (let k = -half; k <= half; k++) {
+        const t = (k + half) / (2 * half);
+        off[(c + k + N) % N] = from + (-2 * from) * (1 - Math.cos(Math.PI * t)) / 2;
+      }
+    }
+    return off;
   }
 
   function buildLane(center, X, off) {
-    const p = center.map((c, i) => c.clone().addScaledVector(X[i], off));
+    const p = center.map((c, i) => c.clone().addScaledVector(X[i], off[i]));
     const seg = [], cum = [0];
     for (let i = 0; i < N; i++) {
       seg[i] = p[i].distanceTo(p[(i + 1) % N]);
@@ -285,9 +334,9 @@
       G.add(strip(i => [at(i, side), at(i, side, 0.35)], MAT.wall));
       G.add(strip(i => [at(i, side), at(i, side, -0.4)], MAT.skirt));
     }
-    for (const off of [LANE_OFF, -LANE_OFF]) {
-      G.add(strip(i => [at(i, off - 0.06, 0.015), at(i, off + 0.06, 0.015)], MAT.slot));
-      for (const r of [-0.2, 0.2]) G.add(strip(i => [at(i, off + r - 0.045, 0.01), at(i, off + r + 0.045, 0.01)], MAT.rail));
+    for (const off of course.offs) {
+      G.add(strip(i => [at(i, off[i] - 0.06, 0.015), at(i, off[i] + 0.06, 0.015)], MAT.slot));
+      for (const r of [-0.2, 0.2]) G.add(strip(i => [at(i, off[i] + r - 0.045, 0.01), at(i, off[i] + r + 0.045, 0.01)], MAT.rail));
     }
 
     // 橋脚（下を通るコースの上には立てない）
