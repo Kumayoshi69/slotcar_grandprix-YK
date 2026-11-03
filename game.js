@@ -875,6 +875,11 @@
 
     document.querySelectorAll('#touchBtns button').forEach(b => b.addEventListener('click', () => onKey(b.dataset.k)));
     updateSoundIcon();
+
+    // レース中に縦向きにされたら一時停止する（横画面前提）
+    if (window.matchMedia) matchMedia('(orientation: portrait)').addEventListener('change', e => {
+      if (e.matches && document.body.classList.contains('touch') && (state === 'race' || state === 'countdown')) togglePause();
+    });
   }
   function updateSoundIcon() {
     document.getElementById('touchSound').textContent = audio.on ? '🔊' : '🔇';

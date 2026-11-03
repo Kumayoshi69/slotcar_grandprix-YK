@@ -108,6 +108,13 @@ body.touch #help { display: none; }
 .pedal-label { position: relative; text-align: center; font-weight: 700; font-size: 15px; pointer-events: none; }
 .pedal-label small { display: block; font-size: 10px; font-weight: 400; opacity: .7; }
 
+/* 縦画面の案内。タッチ端末を縦に持っているときだけ全面に出す */
+#rotate { position: fixed; inset: 0; z-index: 100; background: #0d1117; flex-direction: column;
+  display: none; align-items: center; justify-content: center; text-align: center; padding: 24px; font-size: 18px; }
+@media (orientation: portrait) { body.touch #rotate { display: flex; } }
+.rotate-icon { font-size: 64px; animation: rotate-hint 2s ease-in-out infinite; }
+@keyframes rotate-hint { 0%, 25% { transform: rotate(0); } 50%, 75% { transform: rotate(90deg); } 100% { transform: rotate(0); } }
+
 /* 小さい画面 */
 @media (max-width: 700px), (max-height: 500px) {
   .hud-panel { top: 8px; padding: 6px 10px; min-width: 0; }
