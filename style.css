@@ -1,5 +1,5 @@
 * { box-sizing: border-box; }
-html, body { margin: 0; height: 100%; overflow: hidden; background: #0d1117; color: #e8ecf2;
+html, body { margin: 0; touch-action: manipulation; -webkit-tap-highlight-color: transparent; height: 100%; overflow: hidden; background: #0d1117; color: #e8ecf2;
   font-family: "Segoe UI", "Yu Gothic UI", "Meiryo", sans-serif; }
 #view { position: fixed; inset: 0; }
 .hidden { display: none !important; }
@@ -90,3 +90,34 @@ table.res th:first-child, table.res td:first-child { text-align: left; }
 .laps-detail > div { flex: 1; }
 .laps-detail .best { color: #f5d33b; }
 .newrec { color: #f5d33b; font-weight: 700; margin-top: 10px; }
+
+/* スマホ用の仮想ボタン — body.touch のときだけ出す */
+.touch-ui { display: none; }
+body.touch .touch-ui { display: flex; }
+body.touch #help { display: none; }
+#touchBtns { position: fixed; left: calc(12px + env(safe-area-inset-left)); bottom: calc(12px + env(safe-area-inset-bottom)); gap: 10px; }
+#touchBtns button { width: 54px; height: 54px; padding: 0; font-size: 22px; border-radius: 50%;
+  background: rgba(10,14,22,.6); border-color: rgba(255,255,255,.25); }
+#pedal { position: fixed; right: calc(12px + env(safe-area-inset-right)); bottom: calc(12px + env(safe-area-inset-bottom));
+  width: 110px; height: min(52vh, 320px); border-radius: 18px; overflow: hidden;
+  background: rgba(10,14,22,.55); border: 2px solid rgba(255,255,255,.3);
+  align-items: center; justify-content: center; touch-action: none; user-select: none; -webkit-user-select: none; }
+#pedal.on { border-color: #ff6a5e; }
+#pedalFill { position: absolute; left: 0; right: 0; bottom: 0; height: 0;
+  background: linear-gradient(0deg, rgba(58,211,122,.55), rgba(245,211,59,.7)); }
+.pedal-label { position: relative; text-align: center; font-weight: 700; font-size: 15px; pointer-events: none; }
+.pedal-label small { display: block; font-size: 10px; font-weight: 400; opacity: .7; }
+
+/* 小さい画面 */
+@media (max-width: 700px), (max-height: 500px) {
+  .hud-panel { top: 8px; padding: 6px 10px; min-width: 0; }
+  .hud-left { left: 8px; } .hud-right { right: 8px; }
+  .hud-row { font-size: 14px; }
+  .hud-time { font-size: 20px; margin: 2px 0; }
+  .hud-sub { font-size: 12px; }
+  #lapLog { display: none; }
+  #bigMsg { font-size: 15vmin; }
+  #bigMsg.small { font-size: 8vmin; }
+  .card { padding: 16px; }
+  #menu .card { background: rgba(18,24,36,.92); }
+}

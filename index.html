@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>スロットカー・グランプリ</title>
 <link rel="stylesheet" href="style.css">
 </head>
@@ -30,6 +30,17 @@
   <div id="lapLog"></div>
   <div id="bigMsg"></div>
   <div id="help">Space / ↑ / パッドRT：アクセル　C/パッドY：カメラ　Esc/Start：一時停止　M：サウンド</div>
+
+  <!-- スマホ用の仮想ボタン（タッチ端末でのみ表示） -->
+  <div id="touchBtns" class="touch-ui">
+    <button data-k="Escape" aria-label="一時停止">⏸</button>
+    <button data-k="KeyC" aria-label="カメラ切替">🎥</button>
+    <button data-k="KeyM" aria-label="サウンド" id="touchSound">🔊</button>
+  </div>
+  <div id="pedal" class="touch-ui" aria-label="アクセル">
+    <div id="pedalFill"></div>
+    <div class="pedal-label">アクセル<small>上ほど全開</small></div>
+  </div>
 </div>
 
 <!-- メニュー -->
@@ -66,7 +77,7 @@
     <button id="startBtn" class="primary">スタート（Enter / パッドA）</button>
     <div class="pad" id="padInfo">ゲームパッド未接続（ボタンを押すと認識します）</div>
     <div class="controls">
-      操作：<b>Space</b> / <b>↑</b> を押している間アクセル（離すとブレーキ）。ゲームパッドは <b>右トリガー</b> の押し込み量で速度調整。
+      操作：<b>Space</b> / <b>↑</b> を押している間アクセル（離すとブレーキ）。ゲームパッドは <b>右トリガー</b> の押し込み量で速度調整。スマホは右側の <b>アクセル</b> を押す位置で速度調整（上ほど全開）。
       <a class="manual-link" href="manual.html" target="_blank" rel="noopener">📖 マニュアルを読む</a>
     </div>
     <!-- 広告（Amazon アソシエイト）。中身は ads.js で管理。レース中は出さない -->

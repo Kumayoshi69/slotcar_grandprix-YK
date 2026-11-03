@@ -839,11 +839,52 @@
       : 'ゲームパッド未接続（ボタンを押すと認識します）';
   }
 
+  // スマホ用の仮想ボタン。アクセルは押す位置で強さが変わる（下端 30% ～ 上端 100%）
+  const touch = { throttle: 0, id: null };
+  function initTouch() {
+    const markTouch = () => document.body.classList.add('touch');
+    if (window.matchMedia && matchMedia('(pointer: coarse)').matches) markTouch();
+    window.addEventListener('touchstart', markTouch, { once: true, passive: true });
+
+    const pedal = document.getElementById('pedal');
+    const fill = document.getElementById('pedalFill');
+    const setFrom = e => {
+      const r = pedal.getBoundingClientRect();
+      const f = Math.min(1, Math.max(0, (r.bottom - e.clientY) / r.height));
+      touch.throttle = 0.3 + 0.7 * Math.min(1, f * 1.1);
+      fill.style.height = (touch.throttle * 100) + '%';
+    };
+    const release = e => {
+      if (e.pointerId !== touch.id) return;
+      touch.id = null; touch.throttle = 0;
+      fill.style.height = '0';
+      pedal.classList.remove('on');
+    };
+    pedal.addEventListener('pointerdown', e => {
+      e.preventDefault();
+      touch.id = e.pointerId;
+      pedal.setPointerCapture(e.pointerId);
+      pedal.classList.add('on');
+      setFrom(e);
+    });
+    pedal.addEventListener('pointermove', e => { if (e.pointerId === touch.id) setFrom(e); });
+    pedal.addEventListener('pointerup', release);
+    pedal.addEventListener('pointercancel', release);
+    pedal.addEventListener('lostpointercapture', release);
+    pedal.addEventListener('contextmenu', e => e.preventDefault());
+
+    document.querySelectorAll('#touchBtns button').forEach(b => b.addEventListener('click', () => onKey(b.dataset.k)));
+    updateSoundIcon();
+  }
+  function updateSoundIcon() {
+    document.getElementById('touchSound').textContent = audio.on ? '🔊' : '🔇';
+  }
+
   function readThrottle(dt) {
     const held = THROTTLE_KEYS.some(k => keys.has(k));
     // キーボードはオン／オフなので少しだけなめらかにする
     kbThrottle = held ? Math.min(1, kbThrottle + dt * 6) : Math.max(0, kbThrottle - dt * 10);
-    const t = Math.max(kbThrottle, pad.trigger < 0.03 ? 0 : pad.trigger);
+    const t = Math.max(kbThrottle, pad.trigger < 0.03 ? 0 : pad.trigger, touch.throttle);
     return Math.min(1, t);
   }
 
@@ -989,7 +1030,7 @@
   }
 
   function onKey(code) {
-    if (code === 'KeyM') { audio.on = !audio.on; store.set('sound', audio.on); }
+    if (code === 'KeyM') { audio.on = !audio.on; store.set('sound', audio.on); updateSoundIcon(); }
     if (code === 'KeyC' && state !== 'menu') { camMode = (camMode + 1) % CAM_MODES.length; snapCamera = true; }
     if (state === 'menu' && (code === 'Enter' || code === 'PadA')) startRace();
     else if (state === 'result') {
@@ -1349,6 +1390,7 @@
   if (!LEVELS[settings.level]) settings.level = 2;
   if (settings.lane !== 0 && settings.lane !== 1) settings.lane = 0;
   initMenu();
+  initTouch();
   loadCourse(settings.course);
   renderMenu();
   showAds();
